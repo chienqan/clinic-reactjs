@@ -86,8 +86,8 @@ lbd-pro-react
     │       ├── lbd
     │       │   ├── mixins
     │       │   └── plugins
-    │       ├── light-bootstrap-dashboard.scss
-    │       └── light-bootstrap-dashboard.css
+    │       ├── styles.scss
+    │       └── styles.css
     ├── components
     │   ├── Card
     │   │   ├── Card.jsx
