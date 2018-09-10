@@ -5,7 +5,7 @@ import { HashRouter, Route, Switch } from "react-router-dom";
 import indexRoutes from "./routes/index.jsx";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./assets/sass/light-bootstrap-dashboard.css?v=1.1.1";
+import "./assets/sass/styles.css?v=1.1.1";
 import "./assets/css/demo.css";
 import "./assets/css/pe-icon-7-stroke.css";
 
