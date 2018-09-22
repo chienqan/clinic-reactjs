@@ -1,4 +1,23 @@
-import Dashboard from "views/Dashboard/Dashboard.jsx";
+import ListDiseases from "views/Diseases/ListDiseases.jsx";
+import AddDiseases from "views/Diseases/AddDiseases.jsx";
+import EditDiseases from "views/Diseases/EditDiseases.jsx";
+import ListPrescriptions from "views/Prescriptions/ListPrescriptions.jsx";
+import AddPrescriptions from "views/Prescriptions/AddPrescriptions.jsx";
+import EditPrescriptions from "views/Prescriptions/EditPrescriptions.jsx";
+import ListDrugs from "views/Drugs/ListDrugs.jsx";
+import AddDrugs from "views/Drugs/AddDrugs.jsx";
+import EditDrugs from "views/Drugs/EditDrugs.jsx";
+import ListLabTest from "views/LabTest/ListLabTest.jsx";
+import AddLabTest from "views/LabTest/AddLabTest.jsx";
+import EditLabTest from "views/LabTest/EditLabTest.jsx";
+import NumPatients from "views/Reports/NumPatients.jsx";
+import NumDrugs from "views/Reports/NumDrugs.jsx";
+import ListPatients from "views/Patients/ListPatients.jsx";
+import AddPatients from "views/Patients/AddPatients.jsx";
+import EditPatients from "views/Patients/EditPatients.jsx";
+import ListVisits from "views/Visits/ListVisits.jsx";
+import AddVisits from "views/Visits/AddVisits.jsx";
+import EditVisits from "views/Visits/EditVisits.jsx";
 import Buttons from "views/Components/Buttons.jsx";
 import GridSystem from "views/Components/GridSystem.jsx";
 import Panels from "views/Components/Panels.jsx";
@@ -27,12 +46,189 @@ var pages = [
 ].concat(pagesRoutes);
 
 var dashboardRoutes = [
+    {
+        collapse: true,
+        path: "/diseases",
+        name: "Diseases",
+        icon: "pe-7s-target",
+        state: "openDiseases",
+        views: [
+            {
+                path: "/diseases/list",
+                name: "List",
+                mini: "L",
+                component: ListDiseases
+            },
+            {
+                path: "/diseases/add",
+                name: "Add",
+                mini: "A",
+                component: AddDiseases
+            },
+            {
+                path: "/diseases/edit",
+                name: "Edit",
+                mini: "E",
+                component: EditDiseases
+            }
+        ]
+    },
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "pe-7s-graph",
-    component: Dashboard
-  },
+     collapse: true,
+     path: "/drugs",
+     name: "Drugs",
+     icon: "pe-7s-science",
+     state: "openDrugs",
+     views: [
+        {
+            path: "/drugs/list",
+            name: "List",
+            mini: "L",
+            component: ListDrugs
+        },
+        {
+            path: "/drugs/add",
+            name: "Add",
+            mini: "A",
+            component: AddDrugs
+        },
+        {
+            path: "/drugs/edit",
+            name: "Edit",
+            mini: "E",
+            component: EditDrugs
+        }
+     ]
+    },
+    {
+        collapse: true,
+        path: "/labtest",
+        name: "Lab Test",
+        icon: "pe-7s-hourglass",
+        state: "openLabTest",
+        views: [
+            {
+                path: "/labtest/list",
+                name: "List",
+                mini: "L",
+                component: ListLabTest
+            },
+            {
+                path: "/labtest/add",
+                name: "Add",
+                mini: "A",
+                component: AddLabTest
+            },
+            {
+                path: "/labtest/edit",
+                name: "Edit",
+                mini: "E",
+                component: EditLabTest
+            }
+        ]
+    },
+    {
+        collapse: true,
+        path: "/patients",
+        name: "Patients",
+        icon: "pe-7s-users",
+        state: "openPatients",
+        views: [
+            {
+                path: "/patients/list",
+                name: "List",
+                mini: "L",
+                component: ListPatients
+            },
+            {
+                path: "/patients/add",
+                name: "Add",
+                mini: "A",
+                component: AddPatients
+            },
+            {
+                path: "/patients/edit",
+                name: "Edit",
+                mini: "E",
+                component: EditPatients
+            }
+        ]
+    },
+    {
+        collapse: true,
+        path: "/prescriptions",
+        name: "Prescriptions",
+        icon: "pe-7s-note2",
+        state: "openPrescriptions",
+        views: [
+            {
+                path: "/prescriptions/list",
+                name: "List",
+                mini: "L",
+                component: ListPrescriptions
+            },
+            {
+                path: "/prescriptions/add",
+                name: "Add",
+                mini: "A",
+                component: AddPrescriptions
+            },
+            {
+                path: "/prescriptions/edit",
+                name: "Edit",
+                mini: "E",
+                component: EditPrescriptions
+            }
+        ]
+    },
+    {
+        collapse: true,
+        path: "/reports",
+        name: "Reports",
+        icon: "pe-7s-news-paper",
+        state: "openReports",
+        views: [
+            {
+                path: "/reports/patients",
+                name: "Number of Patients",
+                mini: "P",
+                component: NumPatients
+            },
+            {
+                path: "/reports/drugs",
+                name: "Number of Drugs",
+                mini: "D",
+                component: NumDrugs
+            }
+        ]
+    },
+    {
+        collapse: true,
+        path: "/visits",
+        name: "Visits",
+        icon: "pe-7s-bicycle",
+        state: "openVisits",
+        views: [
+            {
+                path: "/visits/list",
+                name: "List",
+                mini: "L",
+                component: ListVisits
+            },
+            {
+                path: "/visits/add",
+                name: "Add",
+                mini: "A",
+                component: AddVisits
+            },
+            {
+                path: "/visits/edit",
+                name: "Edit",
+                mini: "E",
+                component: EditVisits
+            }
+        ]
+    },
   {
     collapse: true,
     path: "/components",

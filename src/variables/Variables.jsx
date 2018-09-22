@@ -32,7 +32,17 @@ var selectOptions = [
   { value: "ja", label: "日本語" },
   { value: "ko", label: "한국어" }
 ];
-
+var genderOptions = [
+    {value: "m", label: "M"},
+    {value: "f", label: "F"},
+    {value: "other", label: "OTHER"}
+];
+var doseOptions = [
+    {value: "1", label: "1 meals per day"},
+    {value: "2", label: "2 meals per day"},
+    {value: "3", label: "3 meals per day"},
+    {value: "4", label: "4 meals per day"}
+];
 //
 // //
 // // // For Calendar view events
@@ -380,6 +390,27 @@ const tdArray = [
   ["Mike Chaney", "$38,735", "Romania", "Bucharest"]
 ];
 
+const thArrayPatientReports = ["ID", "Number of patients per day", "Date"];
+const tdArrayPatientReports = [
+    ["100", "09/20/2018"],
+    ["130", "09/19/2018"],
+    ["113", "09/18/2018"],
+    ["120", "09/17/2018"],
+    ["110", "09/16/2018"],
+    ["111", "09/15/2018"],
+    ["101", "09/14/2018"]
+];
+
+const thArrayDrugReports = ["ID", "Number of drugs per day", "Date"];
+const tdArrayDrugReports = [
+    ["100", "09/20/2018"],
+    ["130", "09/19/2018"],
+    ["113", "09/18/2018"],
+    ["120", "09/17/2018"],
+    ["110", "09/16/2018"],
+    ["111", "09/15/2018"],
+    ["101", "09/14/2018"]
+];
 //
 // //
 // // // For icons
@@ -692,11 +723,17 @@ var responsiveBar = [
 
 module.exports = {
   selectOptions, // For selets in ExtendedForms view
+  genderOptions,
+  doseOptions,
   events, // For calendar in Calendar view
   table_data, // For vector map on Dashboard view
   style, // For notifications (App container and Notifications view)
   thArray,
   tdArray, // For tables (TableList view)
+  thArrayPatientReports,
+  tdArrayPatientReports,
+  thArrayDrugReports,
+  tdArrayDrugReports,
   iconsArray, // For icons (Icons view)
   dataPie,
   dataSales,
