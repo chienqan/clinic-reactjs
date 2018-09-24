@@ -29,10 +29,9 @@ class Dashboard extends Component {
     }
 
     componentWillMount() {
-        // TODO: uncomment validation has access token or not
-        // if(_.isEmpty(this.props.token)) {
-        //     this.props.history.push('/login');
-        // }
+        if(_.isEmpty(this.props.token)) {
+            this.props.history.push('/login');
+        }
 
         if (document.documentElement.className.indexOf("nav-open") !== -1) {
             document.documentElement.classList.toggle("nav-open");

@@ -11,9 +11,9 @@ import {
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import request from "libs/request";
-import attachToken from "libs/attachToken";
+import {connect} from "react-redux";
 
-class EditLabServices extends Component {
+class AddLabServices extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -25,15 +25,16 @@ class EditLabServices extends Component {
     }
 
     async handleClickSave() {
+        const {token} = this.props;
+        const {labServicesName} = this.state;
+
         let params = {
-            service: {
-                name: this.state.labServicesName
-            }
+            name: labServicesName
         };
 
         try {
-            await request.post(attachToken('/labServices'), params);
-            this.props.history.push('/labServices/list');
+            await request.post(`/labservice?access_token=${token}`, params);
+            this.props.history.push('/lab-services/list');
         } catch (e) {
             console.log(e.message);
         }
@@ -95,4 +96,5 @@ class EditLabServices extends Component {
     }
 }
 
-export default EditLabServices;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(AddLabServices);

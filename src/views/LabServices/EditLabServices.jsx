@@ -11,12 +11,13 @@ import {
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import request from "libs/request";
-import attachToken from "libs/attachToken";
+import {connect} from "react-redux";
 
-class AddLabServices extends Component {
+class EditLabServices extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            labServiceId: this.props.match.params.id,
             labServicesName: "",
             labServicesNameError: null,
         };
@@ -24,16 +25,27 @@ class AddLabServices extends Component {
         this.handleClickSave = this.handleClickSave.bind(this);
     }
 
+    async componentDidMount() {
+        const {labServiceId} = this.state;
+        const {token} = this.props;
+        let response = await request.get(`/labservice/${labServiceId}?access_token=${token}`);
+        this.setState({
+            labServicesName: response.data.name,
+        });
+    }
+
     async handleClickSave() {
+        const {token} = this.props;
+        const {labServiceId, labServicesName} = this.state;
+
         let params = {
-            medicine: {
-                name: this.state.labServicesName
-            }
+            id: labServiceId,
+            name: labServicesName
         };
 
         try {
-            await request.post(attachToken('/labServices'), params);
-            this.props.history.push('/labServices/list');
+            await request.post(`/labservice?access_token=${token}`, params);
+            this.props.history.push('/lab-services/list');
         } catch (e) {
             console.log(e.message);
         }
@@ -58,13 +70,14 @@ class AddLabServices extends Component {
                                                 <FormControl
                                                     type="text"
                                                     name="labServicesName"
+                                                    value={this.state.labServicesName}
                                                     onChange={event => {
                                                         this.setState({ labServicesName: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
                                                                 labServicesNameError: (
                                                                     <small className="text-danger">
-                                                                        Medicine is required.
+                                                                        This field is required.
                                                                     </small>
                                                                 )
                                                             })
@@ -95,4 +108,5 @@ class AddLabServices extends Component {
     }
 }
 
-export default AddLabServices;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(EditLabServices);

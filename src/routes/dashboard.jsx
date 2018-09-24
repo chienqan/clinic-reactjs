@@ -21,25 +21,6 @@ import EditPatients from "views/Patients/EditPatients.jsx";
 import ListVisits from "views/Visits/ListVisits.jsx";
 import AddVisits from "views/Visits/AddVisits.jsx";
 import EditVisits from "views/Visits/EditVisits.jsx";
-import Buttons from "views/Components/Buttons.jsx";
-import GridSystem from "views/Components/GridSystem.jsx";
-import Panels from "views/Components/Panels.jsx";
-import SweetAlert from "views/Components/SweetAlertPage.jsx";
-import Notifications from "views/Components/Notifications.jsx";
-import Icons from "views/Components/Icons.jsx";
-import Typography from "views/Components/Typography.jsx";
-import RegularForms from "views/Forms/RegularForms.jsx";
-import ExtendedForms from "views/Forms/ExtendedForms.jsx";
-import ValidationForms from "views/Forms/ValidationForms.jsx";
-import Wizard from "views/Forms/Wizard/Wizard.jsx";
-import RegularTables from "views/Tables/RegularTables.jsx";
-import ExtendedTables from "views/Tables/ExtendedTables.jsx";
-import ReactTables from "views/Tables/ReactTables.jsx";
-import GoogleMaps from "views/Maps/GoogleMaps.jsx";
-import FullScreenMap from "views/Maps/FullScreenMap.jsx";
-import VectorMap from "views/Maps/VectorMap.jsx";
-import Charts from "views/Charts/Charts.jsx";
-import Calendar from "views/Calendar/Calendar.jsx";
 
 var dashboardRoutes = [
     {
@@ -100,26 +81,26 @@ var dashboardRoutes = [
     },
     {
         collapse: true,
-        path: "/labtest",
+        path: "/lab-test",
         name: "Lab Test",
         icon: "pe-7s-hourglass",
         state: "openLabTest",
         views: [
             {
-                path: "/labtest/list",
+                path: "/lab-test/list",
                 name: "List",
                 mini: "L",
                 component: ListLabTest
             },
             {
-                path: "/labtest/add",
+                path: "/lab-test/add",
                 name: "Add",
                 mini: "A",
                 component: AddLabTest
             },
             {
                 hidden: true,
-                path: "/labtest/edit/:id",
+                path: "/lab-test/edit/:id",
                 name: "Edit",
                 mini: "E",
                 component: EditLabTest
@@ -128,26 +109,26 @@ var dashboardRoutes = [
     },
     {
         collapse: true,
-        path: "/labservices",
+        path: "/lab-services",
         name: "Lab Services",
         icon: "pe-7s-server",
         state: "openLabServices",
         views: [
             {
-                path: "/labservices/list",
+                path: "/lab-services/list",
                 name: "List",
                 mini: "L",
                 component: ListLabServices
             },
             {
-                path: "/labservices/add",
+                path: "/lab-services/add",
                 name: "Add",
                 mini: "A",
                 component: AddLabServices
             },
             {
                 hidden: true,
-                path: "/labservices/edit/:id",
+                path: "/lab-services/edit/:id",
                 name: "Edit",
                 mini: "E",
                 component: EditLabServices
@@ -259,141 +240,6 @@ var dashboardRoutes = [
             }
         ]
     },
-  {
-    collapse: true,
-    path: "/components",
-    name: "Components",
-    state: "openComponents",
-    icon: "pe-7s-plugin",
-    views: [
-      {
-        path: "/components/buttons",
-        name: "Buttons",
-        mini: "B",
-        component: Buttons
-      },
-      {
-        path: "/components/grid-system",
-        name: "Grid System",
-        mini: "GS",
-        component: GridSystem
-      },
-      {
-        path: "/components/panels",
-        name: "Panels",
-        mini: "P",
-        component: Panels
-      },
-      {
-        path: "/components/sweet-alert",
-        name: "Sweet Alert",
-        mini: "SA",
-        component: SweetAlert
-      },
-      {
-        path: "/components/notifications",
-        name: "Notifications",
-        mini: "N",
-        component: Notifications
-      },
-      { path: "/components/icons", name: "Icons", mini: "I", component: Icons },
-      {
-        path: "/components/typography",
-        name: "Typography",
-        mini: "T",
-        component: Typography
-      }
-    ]
-  },
-  {
-    collapse: true,
-    path: "/forms",
-    name: "Forms",
-    state: "openForms",
-    icon: "pe-7s-note2",
-    views: [
-      {
-        path: "/forms/regular-forms",
-        name: "Regular Forms",
-        mini: "RF",
-        component: RegularForms
-      },
-      {
-        path: "/forms/extended-forms",
-        name: "Extended Forms",
-        mini: "EF",
-        component: ExtendedForms
-      },
-      {
-        path: "/forms/validation-forms",
-        name: "Validation Forms",
-        mini: "VF",
-        component: ValidationForms
-      },
-      { path: "/forms/wizard", name: "Wizard", mini: "W", component: Wizard }
-    ]
-  },
-  {
-    collapse: true,
-    path: "/tables",
-    name: "Tables",
-    state: "openTables",
-    icon: "pe-7s-news-paper",
-    views: [
-      {
-        path: "/tables/regular-tables",
-        name: "Regular Tables",
-        mini: "RT",
-        component: RegularTables
-      },
-      {
-        path: "/tables/extended-tables",
-        name: "Extended Tables",
-        mini: "ET",
-        component: ExtendedTables
-      },
-      {
-        path: "/tables/react-table",
-        name: "React Table",
-        mini: "RT",
-        component: ReactTables
-      }
-    ]
-  },
-  {
-    collapse: true,
-    path: "/maps",
-    name: "Maps",
-    state: "openMaps",
-    icon: "pe-7s-map-marker",
-    views: [
-      {
-        path: "/maps/google-maps",
-        name: "Google Maps",
-        mini: "GM",
-        component: GoogleMaps
-      },
-      {
-        path: "/maps/full-screen-maps",
-        name: "Full Screen Map",
-        mini: "FSM",
-        component: FullScreenMap
-      },
-      {
-        path: "/maps/vector-maps",
-        name: "Vector Map",
-        mini: "VM",
-        component: VectorMap
-      }
-    ]
-  },
-  { path: "/charts", name: "Charts", icon: "pe-7s-graph1", component: Charts },
-  {
-    path: "/calendar",
-    name: "Calendar",
-    icon: "pe-7s-date",
-    component: Calendar
-  },
   { redirect: true, path: "/", pathTo: "/diseases/list", name: "Disease List" }
 ];
 export default dashboardRoutes;

@@ -4,25 +4,110 @@ import {
     Row,
     Col,
     FormGroup,
-    FormControl,
     ControlLabel
 } from "react-bootstrap";
 
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Select from "react-select";
-import { selectOptions } from "variables/Variables.jsx";
 import Datetime from "react-datetime";
+import request from "libs/request";
+import getCurrentDate from "libs/getCurrentDate";
+import {connect} from "react-redux";
+
 
 class EditLabTest extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            labTestId: this.props.match.params.id,
+            patientOptions: [],
+            labServiceOptions: [],
+            labTestService: "",
             labTestPatient: "",
             labTestPatientError: null,
             labTestServices: null,
-            labTestDatetime: null
+            labTestDatetime: getCurrentDate()
         };
+
+        this.handleClickSave = this.handleClickSave.bind(this);
+    }
+
+    async componentDidMount() {
+        const {token} = this.props;
+        const {labTestId} = this.state;
+
+        let patients = await request.get(`/patients?access_token=${token}`);
+        let patientOptions = patients.data.map((patient) => {
+            return {
+                value: {
+                    id: patient.id,
+                    name: patient.name
+                },
+                label: patient.name
+            }
+        });
+
+        let labServices = await request.get(`/labservice?access_token=${token}`);
+        let labServiceOptions = labServices.data.map((labService) => {
+            return {
+                value: {
+                    id: labService.id,
+                    name: labService.name
+                },
+                label: labService.name
+            }
+        });
+
+        let labTest = await request.get(`/labtests/${labTestId}?access_token=${token}`);
+        labTest = labTest.data;
+
+        let labTestService = {
+            value: {
+                id: labTest.service.id,
+                name: labTest.service.name
+            },
+            label: labTest.service.name
+        };
+
+        let labTestPatient = {
+            value: {
+                id: labTest.patient.id,
+                name: labTest.patient.name
+            },
+            label: labTest.patient.name
+        };
+
+        this.setState({
+            labTestService: labTestService,
+            labTestPatient: labTestPatient,
+            patientOptions: patientOptions,
+            labServiceOptions: labServiceOptions,
+            loading: false
+        });
+    }
+
+    async handleClickSave() {
+        const {token} = this.props;
+        const {labTestId, labTestService, labTestPatient, labTestDatetime} = this.state;
+
+        let params = {
+            id: labTestId,
+            service: {
+                id: labTestService.value.id
+            },
+            patient: {
+                id: labTestPatient.value.id
+            },
+            testDate: labTestDatetime,
+        };
+
+        try {
+            await request.put(`/labtests?access_token=${token}`, params);
+            this.props.history.push('/lab-test/list');
+        } catch (e) {
+            console.log(e.message);
+        }
     }
 
     render() {
@@ -40,40 +125,27 @@ class EditLabTest extends Component {
                                                 <ControlLabel>
                                                     Patient: <span className="star">*</span>
                                                 </ControlLabel>
-                                                <FormControl
-                                                    type="text"
+                                                <Select
                                                     name="labTestPatient"
-                                                    onChange={event => {
-                                                        this.setState({ labTestPatient: event.target.value });
-                                                        event.target.value === ""
-                                                            ? this.setState({
-                                                                labTestPatientError: (
-                                                                    <small className="text-danger">
-                                                                        This field is required.
-                                                                    </small>
-                                                                )
-                                                            })
-                                                            : this.setState({ labTestPatientError: null });
-                                                    }}
+                                                    value={this.state.labTestPatient}
+                                                    options={this.state.patientOptions}
+                                                    onChange={value =>
+                                                        this.setState({ labTestPatient: value })
+                                                    }
                                                 />
-                                                {this.state.labTestPatientError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
-                                                    Services: <span className="star">*</span>
+                                                    Service: <span className="star">*</span>
                                                 </ControlLabel>
                                                 <Select
-                                                    placeholder=""
-                                                    closeOnSelect={false}
-                                                    multi={true}
-                                                    name="labTestServices"
-                                                    value={this.state.labTestServices}
-                                                    options={selectOptions}
-                                                    onChange={value => {
-                                                        this.setState({ labTestServices: value });
-                                                    }}
+                                                    name="labTestService"
+                                                    value={this.state.labTestService}
+                                                    options={this.state.labServiceOptions}
+                                                    onChange={value =>
+                                                        this.setState({ labTestService: value })
+                                                    }
                                                 />
-                                                {this.state.passwordErrorLogin}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
@@ -94,8 +166,8 @@ class EditLabTest extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
-                                            // wd
-                                            // onClick={this.handleLoginSubmit.bind(this)}
+                                            wd
+                                            onClick={this.handleClickSave}
                                         >
                                             Save
                                         </Button>
@@ -110,4 +182,5 @@ class EditLabTest extends Component {
     }
 }
 
-export default EditLabTest;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(EditLabTest);

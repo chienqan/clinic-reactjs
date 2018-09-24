@@ -12,7 +12,6 @@ import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Select from "react-select";
 import { selectOptions, doseOptions } from "variables/Variables.jsx";
-import Datetime from "react-datetime";
 
 class EditPrescriptions extends Component {
     constructor(props) {

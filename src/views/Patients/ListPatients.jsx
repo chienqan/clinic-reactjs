@@ -114,6 +114,7 @@ class ListPatients extends Component {
                                 content={
                                     <ReactTable
                                         data={this.renderCell()}
+                                        loading={this.state.loading}
                                         columns={[
                                             {
                                                 Header: "Id",

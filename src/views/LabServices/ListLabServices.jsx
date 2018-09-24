@@ -6,8 +6,8 @@ import { Grid, Row, Col } from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import request from "libs/request";
-import attachToken from "libs/attachToken";
 import _ from "lodash";
+import {connect} from "react-redux";
 
 class ListLabServices extends Component {
     constructor(props) {
@@ -16,13 +16,16 @@ class ListLabServices extends Component {
             labServices: [],
             loading: true
         };
+
         this.handleClickEdit = this.handleClickEdit.bind(this);
         this.handleClickAdd = this.handleClickAdd.bind(this);
         this.handleClickRemove = this.handleClickRemove.bind(this);
     }
 
     async componentDidMount() {
-        let response = await request.get(attachToken('/labServices'));
+        const {token} = this.props;
+
+        let response = await request.get(`/labservice?access_token=${token}`);
         this.setState({
             labServices: response.data,
             loading: false
@@ -30,19 +33,21 @@ class ListLabServices extends Component {
     }
 
     handleClickAdd() {
-        this.props.history.push('/labServices/add')
+        this.props.history.push('/lab-services/add')
     };
 
     handleClickEdit(id) {
-        this.props.history.push(`/labServices/edit/${id}`)
+        this.props.history.push(`/lab-services/edit/${id}`)
     };
 
     async handleClickRemove(key, id) {
+        const {token} = this.props;
+        const {labServices} = this.state;
+
         try {
-            const {labServices} = this.state;
-            await request.delete(attachToken(`/labServices/${id}`));
+            await request.delete(`/labservice/${id}?access_token=${token}`);
             labServices.splice(key, 1);
-            this.setState({ drugs: labServices });
+            this.setState({ labServices: labServices });
         } catch (e) {
             console.log(e.message);
         }
@@ -56,10 +61,9 @@ class ListLabServices extends Component {
         }
 
         return labServices.map((prop, key) => {
-            console.log(prop.service.name)
             return {
                 id: key,
-                name: prop.service.name,
+                name: prop.name,
                 actions: (
                     // we've added some custom button actions
                     <div className="actions-right">
@@ -140,4 +144,5 @@ class ListLabServices extends Component {
     }
 }
 
-export default ListLabServices;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(ListLabServices);

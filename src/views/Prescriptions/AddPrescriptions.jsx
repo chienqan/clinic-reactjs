@@ -12,7 +12,8 @@ import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Select from "react-select";
 import { selectOptions, doseOptions } from "variables/Variables.jsx";
-import Datetime from "react-datetime";
+import {connect} from "react-redux";
+import request from "libs/request";
 
 class AddPrescriptions extends Component {
     constructor(props) {
@@ -32,7 +33,20 @@ class AddPrescriptions extends Component {
         this.handleClickSave = this.handleClickSave.bind(this);
     }
 
-    handleClickSave() {
+    async handleClickSave() {
+        const {token} = this.props;
+        const {labServicesName} = this.state;
+
+        let params = {
+            name: labServicesName
+        };
+
+        try {
+            await request.post(`/labservice?access_token=${token}`, params);
+            this.props.history.push('/lab-services/list');
+        } catch (e) {
+            console.log(e.message);
+        }
 
     }
 
@@ -193,4 +207,5 @@ class AddPrescriptions extends Component {
     }
 }
 
-export default AddPrescriptions;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(AddPrescriptions);
