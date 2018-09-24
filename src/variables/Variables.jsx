@@ -33,8 +33,8 @@ var selectOptions = [
   { value: "ko", label: "한국어" }
 ];
 var genderOptions = [
-    {value: "m", label: "M"},
-    {value: "f", label: "F"},
+    {value: "male", label: "MALE"},
+    {value: "female", label: "FEMALE"},
     {value: "other", label: "OTHER"}
 ];
 var doseOptions = [

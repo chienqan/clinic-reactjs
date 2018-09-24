@@ -1,5 +1,5 @@
 const initialState = {
-    token: "682cfac8-11ad-4321-b226-ba28a51eeade"
+    token: "f630179b-0ebc-47f8-8516-dcec68b46ed7"
 };
 
 export default initialState;

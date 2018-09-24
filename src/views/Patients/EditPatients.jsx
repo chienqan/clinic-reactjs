@@ -11,25 +11,86 @@ import {
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Select from "react-select";
-import { selectOptions, genderOptions } from "variables/Variables.jsx";
-import Datetime from "react-datetime";
+import { genderOptions } from "variables/Variables.jsx";
+import request from "libs/request";
+import {connect} from "react-redux";
+
 
 class EditPatients extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            patientId: this.props.match.params.id,
+            patientStreetAddressId: null,
             patientName: "",
             patientNameError: null,
             patientGender: null,
-            patientBirthday: null,
-            multipleSelect: null,
+            patientBirthday: "",
+            patientBirthdayError: null,
             patientStreetAddress: "",
             patientStreetAddressError: null,
-            patientCity: null,
-            patientState: null,
+            patientCity: "",
+            patientCityError: null,
+            patientState: "",
+            patientStateError: null,
             patientPostalCode: "",
             patientPostalCodeError: null
         };
+
+        this.handleClickSave = this.handleClickSave.bind(this);
+    }
+
+    async componentDidMount() {
+        const {patientId} = this.state;
+        const {token} = this.props;
+        let response = await request.get(`/patients/${patientId}?access_token=${token}`);
+        let patient = response.data;
+
+        this.setState({
+            patientStreetAddressId: patient.address.id,
+            patientName: patient.name,
+            patientGender: patient.gender,
+            patientBirthday: patient.birthday,
+            patientStreetAddress: patient.address.streetAddress,
+            patientCity: patient.address.city,
+            patientState: patient.address.state,
+            patientPostalCode: patient.address.postalCode
+        });
+    }
+
+    async handleClickSave() {
+        const {token} = this.props;
+
+        let addressParam = {
+            id: this.state.patientStreetAddressId,
+            streetAddress: this.state.patientStreetAddress,
+            city: this.state.patientCity,
+            state: this.state.patientState,
+            postalCode: this.state.patientPostalCode
+        };
+
+        try {
+            await request.put(`/addresses?access_token=${token}`, addressParam)
+        } catch(e) {
+            console.log(e.message);
+        }
+
+        let patientParam = {
+            name: this.state.patientName,
+            gender: this.state.patientGender.value,
+            birthday: this.state.patientBirthday,
+            address: {
+                id: this.state.patientStreetAddressId
+            }
+        };
+
+        try {
+            await request.put(`/patients?access_token=${token}`, patientParam)
+        } catch (e) {
+            console.log(e.message);
+        }
+
+        this.props.history.push('/patients/list');
     }
 
     render() {
@@ -50,6 +111,7 @@ class EditPatients extends Component {
                                                 <FormControl
                                                     type="text"
                                                     name="patientName"
+                                                    value={this.state.patientName}
                                                     onChange={event => {
                                                         this.setState({ patientName: event.target.value });
                                                         event.target.value === ""
@@ -83,14 +145,24 @@ class EditPatients extends Component {
                                                 <ControlLabel>
                                                     Birthday: <span className="star">*</span>
                                                 </ControlLabel>
-                                                <Datetime
-                                                    timeFormat={false}
-                                                    inputProps={{ placeholder: "" }}
-                                                    defaultValue={new Date()}
-                                                    onChange={value =>
-                                                        this.setState({ patientBirthday: value })
-                                                    }
+                                                <FormControl
+                                                    type="text"
+                                                    name="patientBirthday"
+                                                    value={this.state.patientBirthday}
+                                                    onChange={event => {
+                                                        this.setState({ patientBirthday: event.target.value });
+                                                        event.target.value === ""
+                                                            ? this.setState({
+                                                                patientBirthdayError: (
+                                                                    <small className="text-danger">
+                                                                        Patient's name is required.
+                                                                    </small>
+                                                                )
+                                                            })
+                                                            : this.setState({ patientBirthdayError: null });
+                                                    }}
                                                 />
+                                                {this.state.patientBirthdayError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
@@ -99,6 +171,7 @@ class EditPatients extends Component {
                                                 <FormControl
                                                     type="text"
                                                     name="patientStreetAddress"
+                                                    value={this.state.patientStreetAddress}
                                                     onChange={event => {
                                                         this.setState({ patientStreetAddress: event.target.value });
                                                         event.target.value === ""
@@ -118,35 +191,47 @@ class EditPatients extends Component {
                                                 <ControlLabel>
                                                     City: <span className="star">*</span>
                                                 </ControlLabel>
-                                                <Select
-                                                    placeholder=""
-                                                    closeOnSelect={false}
-                                                    multi={true}
+                                                <FormControl
+                                                    type="text"
                                                     name="patientCity"
                                                     value={this.state.patientCity}
-                                                    options={selectOptions}
-                                                    onChange={value => {
-                                                        this.setState({ patientCity: value });
+                                                    onChange={event => {
+                                                        this.setState({ patientCity: event.target.value });
+                                                        event.target.value === ""
+                                                            ? this.setState({
+                                                                patientCityError: (
+                                                                    <small className="text-danger">
+                                                                        Street address is required.
+                                                                    </small>
+                                                                )
+                                                            })
+                                                            : this.setState({ patientCityError: null });
                                                     }}
                                                 />
-                                                {this.state.passwordErrorLogin}
+                                                {this.state.patientCityError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
                                                     State: <span className="star">*</span>
                                                 </ControlLabel>
-                                                <Select
-                                                    placeholder=""
-                                                    closeOnSelect={false}
-                                                    multi={true}
+                                                <FormControl
+                                                    type="text"
                                                     name="patientState"
                                                     value={this.state.patientState}
-                                                    options={selectOptions}
-                                                    onChange={value => {
-                                                        this.setState({ patientState: value });
+                                                    onChange={event => {
+                                                        this.setState({ patientState: event.target.value });
+                                                        event.target.value === ""
+                                                            ? this.setState({
+                                                                patientStateError: (
+                                                                    <small className="text-danger">
+                                                                        Street address is required.
+                                                                    </small>
+                                                                )
+                                                            })
+                                                            : this.setState({ patientStateError: null });
                                                     }}
                                                 />
-                                                {this.state.passwordErrorLogin}
+                                                {this.state.patientStateError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
@@ -155,6 +240,7 @@ class EditPatients extends Component {
                                                 <FormControl
                                                     type="number"
                                                     name="patientPostalCode"
+                                                    value={this.state.patientPostalCode}
                                                     onChange={event => {
                                                         this.setState({
                                                             patientPostalCode: event.target.value
@@ -180,8 +266,8 @@ class EditPatients extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
-                                            // wd
-                                            // onClick={this.handleLoginSubmit.bind(this)}
+                                            wd
+                                            onClick={this.handleClickSave}
                                         >
                                             Save
                                         </Button>
@@ -196,4 +282,5 @@ class EditPatients extends Component {
     }
 }
 
-export default EditPatients;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(EditPatients);

@@ -25,6 +25,10 @@ class AddLabTest extends Component {
         };
     }
 
+    handleClickSave() {
+
+    }
+
     render() {
         return (
             <div className="main-content">
@@ -80,6 +84,7 @@ class AddLabTest extends Component {
                                                     Datetime: <span className="star">*</span>
                                                 </ControlLabel>
                                                 <Datetime
+                                                    timeFormat={false}
                                                     inputProps={{ placeholder: "Datetime Picker Here" }}
                                                     defaultValue={new Date()}
                                                     onChange={value => {
@@ -94,8 +99,8 @@ class AddLabTest extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
-                                            // wd
-                                            // onClick={this.handleLoginSubmit.bind(this)}
+                                            wd
+                                            onClick={this.handleClickSave}
                                         >
                                             Save
                                         </Button>

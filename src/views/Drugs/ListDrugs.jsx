@@ -60,7 +60,7 @@ class ListDrugs extends Component {
         }
 
         return drugs.map((prop, key) => {
-            console.log(prop.medicine.name)
+            console.log(prop.medicine.name);
             return {
                 id: key,
                 name: prop.medicine.name,

@@ -31,9 +31,22 @@ class ListVisits extends Component {
         this.props.history.push('/visits/add')
     };
 
-    handleClickEdit() {
-        this.props.history.push('/visits/edit/')
+    handleClickEdit(id) {
+        this.props.history.push(`/visits/edit/${id}`)
     };
+
+    async handleClickRemove(key, id) {
+        const {visits} = this.state;
+        const {token} = this.props;
+
+        try {
+            await request.delete(`/visits/${id}?access_token=${token}`);
+            visits.splice(key, 1);
+            this.setState({ visits: visits });
+        } catch (e) {
+            console.log(e.message);
+        }
+    }
 
     renderCell() {
         const {visits} = this.state;
@@ -46,13 +59,14 @@ class ListVisits extends Component {
             return {
                 id: key,
                 datetime: prop.date + ' ' + prop.time,
+                problems: prop.problems.join(', '),
                 patient: prop.patient.name,
                 actions: (
                     // we've added some custom button actions
                     <div className="actions-right">
                         {/* use this button to add a edit kind of action */}
                         <Button
-                            onClick={this.handleClickEdit}
+                            onClick={() => this.handleClickEdit(prop.id)}
                             bsStyle="warning"
                             simple
                             icon
@@ -62,7 +76,7 @@ class ListVisits extends Component {
                         </Button>{" "}
                         {/* use this button to remove the data row */}
                         <Button
-                            onClick={() => console.log("TRUE")}
+                            onClick={() => this.handleClickRemove(key, prop.id)}
                             bsStyle="danger"
                             simple
                             icon
@@ -101,6 +115,12 @@ class ListVisits extends Component {
                                             {
                                                 Header: "Datetime",
                                                 accessor: "datetime",
+                                                sortable: false,
+                                                filterable: false
+                                            },
+                                            {
+                                                Header: "Problems",
+                                                accessor: "problems",
                                                 sortable: false,
                                                 filterable: false
                                             },

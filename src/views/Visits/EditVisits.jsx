@@ -10,21 +10,66 @@ import {
 
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
-import Select from "react-select";
-import { selectOptions } from "variables/Variables.jsx";
 import Datetime from "react-datetime";
+import request from "libs/request";
+import getCurrentDateTime from "libs/getCurrentDateTime";
+import {connect} from "react-redux";
 
 class EditVisits extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            visitId: this.props.match.params.id,
             visitPrescriptionId: "",
             visitPrescriptionIdError: null,
-            visitPatient: "",
-            visitPatientError: null,
-            visitDiseases: null,
-            visitDatetime: null
+            visitPatientId: "",
+            visitPatientIdError: null,
+            visitProblems: "",
+            visitProblemsError: null,
+            visitDatetime: getCurrentDateTime()
         };
+
+        this.handleClickSave = this.handleClickSave.bind(this);
+    }
+
+    async componentDidMount() {
+        const {visitId} = this.state;
+        const {token} = this.props;
+        let response = await request.get(`/visits/${visitId}?access_token=${token}`);
+        let visit = response.data;
+
+        this.setState({
+            visitPrescriptionId: visit.prescription.id,
+            visitPatientId: visit.patient.id,
+            visitProblems: visit.problems.join(', '),
+            visitDatetime: getCurrentDateTime()
+        });
+    }
+
+    async handleClickSave() {
+        const {token} = this.props;
+        let datetime = this.state.visitDatetime.split(" ");
+        let problems = this.state.visitProblems.split(",").map(problem => problem.trim());
+
+        let params = {
+            id: this.state.visitId,
+            date: datetime[0],
+            time: datetime[1] + ' ' + datetime[2],
+            problems: problems,
+            prescription: {
+                id: this.state.visitPrescriptionId
+            },
+            patient: {
+                id: this.state.visitPatientId
+            }
+        };
+
+        try {
+            await request.put(`/visits?access_token=${token}`, params);
+            this.props.history.push('/visits/list');
+        } catch (e) {
+            console.log(e.message);
+        }
     }
 
     render() {
@@ -45,6 +90,7 @@ class EditVisits extends Component {
                                                 <FormControl
                                                     type="number"
                                                     name="visitPrescriptionId"
+                                                    value={this.state.visitPrescriptionId}
                                                     onChange={event => {
                                                         this.setState({
                                                             visitPrescriptionId: event.target.value
@@ -69,47 +115,54 @@ class EditVisits extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="text"
-                                                    name="visitPatient"
+                                                    name="visitPatientId"
+                                                    value={this.state.visitPatientId}
                                                     onChange={event => {
-                                                        this.setState({ visitPatient: event.target.value });
+                                                        this.setState({ visitPatientId: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                visitPatientError: (
+                                                                visitPatientIdError: (
                                                                     <small className="text-danger">
                                                                         This field is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ visitPatientError: null });
+                                                            : this.setState({ visitPatientIdError: null });
                                                     }}
                                                 />
-                                                {this.state.visitPatientError}
+                                                {this.state.visitPatientIdError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
-                                                    Diseases: <span className="star">*</span>
+                                                    Problems: <span className="star">*</span>
                                                 </ControlLabel>
-                                                <Select
-                                                    placeholder=""
-                                                    closeOnSelect={false}
-                                                    multi={true}
-                                                    name="visitDiseases"
-                                                    value={this.state.visitDiseases}
-                                                    options={selectOptions}
-                                                    onChange={value => {
-                                                        this.setState({ visitDiseases: value });
+                                                <FormControl
+                                                    type="text"
+                                                    name="visitProblems"
+                                                    value={this.state.visitProblems}
+                                                    placeholder="headache, stomach, fever, diarrhea, stomachache"
+                                                    onChange={event => {
+                                                        this.setState({ visitProblems: event.target.value });
+                                                        event.target.value === ""
+                                                            ? this.setState({
+                                                                visitProblemsError: (
+                                                                    <small className="text-danger">
+                                                                        This field is required.
+                                                                    </small>
+                                                                )
+                                                            })
+                                                            : this.setState({ visitProblemsError: null });
                                                     }}
                                                 />
-                                                {this.state.passwordErrorLogin}
+                                                {this.state.visitProblemsError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
                                                     Datetime: <span className="star">*</span>
                                                 </ControlLabel>
                                                 <Datetime
-                                                    timeFormat={false}
                                                     inputProps={{ placeholder: "" }}
-                                                    defaultValue={new Date()}
+                                                    defaultValue={this.state.visitDatetime}
                                                     onChange={value => {
                                                         this.setState({ visitDatetime: value });
                                                     }}
@@ -122,8 +175,8 @@ class EditVisits extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
-                                            // wd
-                                            // onClick={this.handleLoginSubmit.bind(this)}
+                                            wd
+                                            onClick={this.handleClickSave}
                                         >
                                             Save
                                         </Button>
@@ -138,4 +191,5 @@ class EditVisits extends Component {
     }
 }
 
-export default EditVisits;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(EditVisits);

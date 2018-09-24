@@ -27,8 +27,13 @@ class EditPrescriptions extends Component {
             prescriptionsDose: null,
             prescriptionsUse: "",
             prescriptionsUseError: null,
-            prescriptionsDatetime: null
         };
+
+        this.handleClickSave = this.handleClickSave.bind(this);
+    }
+
+    async handleClickSave() {
+
     }
 
     render() {
@@ -165,18 +170,6 @@ class EditPrescriptions extends Component {
                                                 />
                                                 {this.state.prescriptionsUseError}
                                             </FormGroup>
-                                            <FormGroup>
-                                                <ControlLabel>
-                                                    Datetime: <span className="star">*</span>
-                                                </ControlLabel>
-                                                <Datetime
-                                                    inputProps={{ placeholder: "Datetime Picker Here" }}
-                                                    defaultValue={new Date()}
-                                                    onChange={value =>
-                                                        this.setState({ prescriptionsDatetime: value })
-                                                    }
-                                                />
-                                            </FormGroup>
                                         </div>
                                     }
                                     ftTextCenter
@@ -184,8 +177,8 @@ class EditPrescriptions extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
-                                            // wd
-                                            // onClick={this.handleLoginSubmit.bind(this)}
+                                            wd
+                                            onClick={this.handleClickSave}
                                         >
                                             Save
                                         </Button>

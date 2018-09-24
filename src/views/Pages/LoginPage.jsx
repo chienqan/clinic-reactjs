@@ -49,7 +49,7 @@ class LoginPage extends Component {
 
         try {
             let response = await request(config);
-            this.props.saveToken(response.data.token);
+            this.props.saveToken(response.data.access_token);
             this.props.history.push('/diseases/list');
         } catch (e) {
             console.log(e.message);
