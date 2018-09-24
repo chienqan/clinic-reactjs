@@ -18,9 +18,10 @@ class EditLabTest extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            type_text: "",
-            type_textError: null,
-            multipleSelect: null
+            labTestPatient: "",
+            labTestPatientError: null,
+            labTestServices: null,
+            labTestDatetime: null
         };
     }
 
@@ -41,21 +42,21 @@ class EditLabTest extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="text"
-                                                    name="type_text"
+                                                    name="labTestPatient"
                                                     onChange={event => {
-                                                        this.setState({ type_text: event.target.value });
+                                                        this.setState({ labTestPatient: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                type_textError: (
+                                                                labTestPatientError: (
                                                                     <small className="text-danger">
-                                                                        Patient's name is required.
+                                                                        This field is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_textError: null });
+                                                            : this.setState({ labTestPatientError: null });
                                                     }}
                                                 />
-                                                {this.state.type_textError}
+                                                {this.state.labTestPatientError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
@@ -65,11 +66,11 @@ class EditLabTest extends Component {
                                                     placeholder=""
                                                     closeOnSelect={false}
                                                     multi={true}
-                                                    name="multipleSelect"
-                                                    value={this.state.multipleSelect}
+                                                    name="labTestServices"
+                                                    value={this.state.labTestServices}
                                                     options={selectOptions}
                                                     onChange={value => {
-                                                        this.setState({ multipleSelect: value });
+                                                        this.setState({ labTestServices: value });
                                                     }}
                                                 />
                                                 {this.state.passwordErrorLogin}
@@ -81,6 +82,9 @@ class EditLabTest extends Component {
                                                 <Datetime
                                                     inputProps={{ placeholder: "Datetime Picker Here" }}
                                                     defaultValue={new Date()}
+                                                    onChange={value => {
+                                                        this.setState({ labTestDatetime: value });
+                                                    }}
                                                 />
                                             </FormGroup>
                                         </div>
