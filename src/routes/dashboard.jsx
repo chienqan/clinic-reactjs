@@ -8,6 +8,9 @@ import ListDrugs from "views/Drugs/ListDrugs.jsx";
 import AddDrugs from "views/Drugs/AddDrugs.jsx";
 import EditDrugs from "views/Drugs/EditDrugs.jsx";
 import ListLabTest from "views/LabTest/ListLabTest.jsx";
+import AddLabServices from "views/LabServices/AddLabServices.jsx";
+import ListLabServices from "views/LabServices/ListLabServices.jsx";
+import EditLabServices from "views/LabServices/EditLabServices.jsx";
 import AddLabTest from "views/LabTest/AddLabTest.jsx";
 import EditLabTest from "views/LabTest/EditLabTest.jsx";
 import NumPatients from "views/Reports/NumPatients.jsx";
@@ -120,6 +123,34 @@ var dashboardRoutes = [
                 name: "Edit",
                 mini: "E",
                 component: EditLabTest
+            }
+        ]
+    },
+    {
+        collapse: true,
+        path: "/labservices",
+        name: "Lab Services",
+        icon: "pe-7s-server",
+        state: "openLabServices",
+        views: [
+            {
+                path: "/labservices/list",
+                name: "List",
+                mini: "L",
+                component: ListLabServices
+            },
+            {
+                path: "/labservices/add",
+                name: "Add",
+                mini: "A",
+                component: AddLabServices
+            },
+            {
+                hidden: true,
+                path: "/labservices/edit/:id",
+                name: "Edit",
+                mini: "E",
+                component: EditLabServices
             }
         ]
     },
