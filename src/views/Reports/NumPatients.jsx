@@ -3,9 +3,43 @@ import { Table, Grid, Row, Col } from "react-bootstrap";
 
 import Card from "components/Card/Card.jsx";
 
-import { thArrayPatientReports, tdArrayPatientReports } from "variables/Variables.jsx";
+import request from "libs/request";
+import access_token from "variables/accessTokenVariables";
+import _ from "lodash";
 
 class NumPatients extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            reports: [],
+        };
+    }
+
+    async componentDidMount() {
+        let response = await request.get(`/reports/number-of-patient-visit-per-day?access_token=${access_token}`);
+        this.setState({
+            reports: response.data
+        });
+    }
+
+    renderCell() {
+        const {reports} = this.state;
+
+        if(_.isEmpty(reports)) {
+            return [];
+        }
+
+        return reports.map((prop, key) => {
+            return (
+                <tr key={key}>
+                    <td>{key}</td>
+                    <td>{prop.date}</td>
+                    <td>{prop.numberOfPatient}</td>
+                </tr>
+            )
+        })
+    }
+
     render() {
         return (
             <div className="main-content">
@@ -18,23 +52,14 @@ class NumPatients extends Component {
                                 content={
                                     <Table striped hover responsive>
                                         <thead>
-                                        <tr>
-                                            {thArrayPatientReports.map((prop, key) => {
-                                                return <th key={key}>{prop}</th>;
-                                            })}
-                                        </tr>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Date</th>
+                                                <th>Number Of Patients</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        {tdArrayPatientReports.map((prop, key) => {
-                                            return (
-                                                <tr key={key}>
-                                                    <td>{key + 1}</td>
-                                                    {prop.map((prop, key) => {
-                                                        return <td key={key}>{prop}</td>;
-                                                    })}
-                                                </tr>
-                                            );
-                                        })}
+                                            {this.renderCell()}
                                         </tbody>
                                     </Table>
                                 }

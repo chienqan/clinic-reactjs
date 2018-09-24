@@ -37,13 +37,6 @@ import FullScreenMap from "views/Maps/FullScreenMap.jsx";
 import VectorMap from "views/Maps/VectorMap.jsx";
 import Charts from "views/Charts/Charts.jsx";
 import Calendar from "views/Calendar/Calendar.jsx";
-import UserPage from "views/Pages/UserPage.jsx";
-
-import pagesRoutes from "./pages.jsx";
-
-var pages = [
-  { path: "/user-page", name: "User Page", mini: "UP", component: UserPage }
-].concat(pagesRoutes);
 
 var dashboardRoutes = [
     {
@@ -66,7 +59,8 @@ var dashboardRoutes = [
                 component: AddDiseases
             },
             {
-                path: "/diseases/edit",
+                hidden: true,
+                path: "/diseases/edit/:id",
                 name: "Edit",
                 mini: "E",
                 component: EditDiseases
@@ -93,7 +87,8 @@ var dashboardRoutes = [
             component: AddDrugs
         },
         {
-            path: "/drugs/edit",
+            hidden: true,
+            path: "/drugs/edit/:id",
             name: "Edit",
             mini: "E",
             component: EditDrugs
@@ -120,7 +115,8 @@ var dashboardRoutes = [
                 component: AddLabTest
             },
             {
-                path: "/labtest/edit",
+                hidden: true,
+                path: "/labtest/edit/:id",
                 name: "Edit",
                 mini: "E",
                 component: EditLabTest
@@ -147,7 +143,8 @@ var dashboardRoutes = [
                 component: AddPatients
             },
             {
-                path: "/patients/edit",
+                hidden: true,
+                path: "/patients/edit/:id",
                 name: "Edit",
                 mini: "E",
                 component: EditPatients
@@ -174,7 +171,8 @@ var dashboardRoutes = [
                 component: AddPrescriptions
             },
             {
-                path: "/prescriptions/edit",
+                hidden: true,
+                path: "/prescriptions/edit/:id",
                 name: "Edit",
                 mini: "E",
                 component: EditPrescriptions
@@ -189,13 +187,13 @@ var dashboardRoutes = [
         state: "openReports",
         views: [
             {
-                path: "/reports/patients",
+                path: "/reports/number-of-patient-visit-per-day",
                 name: "Number of Patients",
                 mini: "P",
                 component: NumPatients
             },
             {
-                path: "/reports/drugs",
+                path: "/reports/number-of-drug-used-per-day",
                 name: "Number of Drugs",
                 mini: "D",
                 component: NumDrugs
@@ -222,7 +220,8 @@ var dashboardRoutes = [
                 component: AddVisits
             },
             {
-                path: "/visits/edit",
+                hidden: true,
+                path: "/visits/edit/:id",
                 name: "Edit",
                 mini: "E",
                 component: EditVisits
@@ -364,14 +363,6 @@ var dashboardRoutes = [
     icon: "pe-7s-date",
     component: Calendar
   },
-  {
-    collapse: true,
-    path: "/pages",
-    name: "Pages",
-    state: "openPages",
-    icon: "pe-7s-gift",
-    views: pages
-  },
-  { redirect: true, path: "/", pathTo: "/dashboard", name: "Dashboard" }
+  { redirect: true, path: "/", pathTo: "/diseases/list", name: "Disease List" }
 ];
 export default dashboardRoutes;

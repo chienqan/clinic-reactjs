@@ -10,15 +10,34 @@ import {
 
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
+import request from "libs/request";
+import attachToken from "libs/attachToken";
 
 class AddDrugs extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            type_text: "",
-            type_textError: null,
-            multipleSelect: null
+            medicineName: "",
+            medicineNameError: null,
         };
+
+        this.handleClickSave = this.handleClickSave.bind(this);
+    }
+
+    async handleClickSave() {
+        let params = {
+            medicine: {
+                name: this.state.medicineName
+            }
+        };
+
+        try {
+            await request.post(attachToken('/drugs'), params);
+            this.props.history.push('/drugs/list');
+        } catch (e) {
+            console.log(e.message);
+        }
+
     }
 
     render() {
@@ -38,21 +57,21 @@ class AddDrugs extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="text"
-                                                    name="type_text"
+                                                    name="medicineName"
                                                     onChange={event => {
-                                                        this.setState({ type_text: event.target.value });
+                                                        this.setState({ medicineName: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                type_textError: (
+                                                                medicineNameError: (
                                                                     <small className="text-danger">
                                                                         Medicine is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_textError: null });
+                                                            : this.setState({ medicineNameError: null });
                                                     }}
                                                 />
-                                                {this.state.type_textError}
+                                                {this.state.medicineNameError}
                                             </FormGroup>
                                         </div>
                                     }
@@ -61,8 +80,7 @@ class AddDrugs extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
-                                            // wd
-                                            // onClick={this.handleLoginSubmit.bind(this)}
+                                            onClick={this.handleClickSave}
                                         >
                                             Save
                                         </Button>

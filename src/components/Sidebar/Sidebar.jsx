@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Collapse } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 // this is used to create scrollbars on windows devices like the ones from apple devices
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -9,8 +9,7 @@ import HeaderLinks from "components/Header/HeaderLinks.jsx";
 
 // backgroundImage for Sidebar
 import image from "assets/img/full-screen-image-3.jpg";
-// image for avatar in Sidebar
-import avatar from "assets/img/default-avatar.png";
+
 // logo for sidebar
 import logo from "logo.svg";
 
@@ -71,66 +70,16 @@ class Sidebar extends Component {
       <div className="sidebar" data-color="black" data-image={image}>
         <div className="sidebar-background" style={bgImage} />
         <div className="logo">
-          <a
-            href="https://www.creative-tim.com"
-            className="simple-text logo-mini"
-          >
+          <Link to={"/diseases/list"} className="simple-text logo-mini">
             <div className="logo-img">
               <img src={logo} alt="react-logo" />
             </div>
-          </a>
-          <a
-            href="https://www.creative-tim.com"
-            className="simple-text logo-normal"
-          >
+          </Link>
+          <Link to={"/diseases/list"} className="simple-text logo-normal">
             Clinicat
-          </a>
+          </Link>
         </div>
         <div className="sidebar-wrapper" ref="sidebarWrapper">
-          <div className="user">
-            <div className="photo">
-              <img src={avatar} alt="Avatar" />
-            </div>
-            <div className="info">
-              <a
-                onClick={() =>
-                  this.setState({ openAvatar: !this.state.openAvatar })
-                }
-              >
-                <span>
-                  Tania Andrew
-                  <b
-                    className={
-                      this.state.openAvatar ? "caret rotate-180" : "caret"
-                    }
-                  />
-                </span>
-              </a>
-              <Collapse in={this.state.openAvatar}>
-                <ul className="nav">
-                  <li>
-                    <a>
-                      <span className="sidebar-mini">MP</span>
-                      <span className="sidebar-normal">My Profile</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <span className="sidebar-mini">EP</span>
-                      <span className="sidebar-normal">Edit Profile</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <span className="sidebar-mini">S</span>
-                      <span className="sidebar-normal">Settings</span>
-                    </a>
-                  </li>
-                </ul>
-              </Collapse>
-            </div>
-          </div>
-
           <ul className="nav">
             {/* If we are on responsive, we want both links from navbar and sidebar
                             to appear in sidebar, so we render here HeaderLinks */}
@@ -144,6 +93,7 @@ class Sidebar extends Component {
             {dashboardRoutes.map((prop, key) => {
               var st = {};
               st[prop["state"]] = !this.state[prop.state];
+
               if (prop.collapse) {
                 return (
                   <li className={this.activeRoute(prop.path)} key={key}>
@@ -163,6 +113,9 @@ class Sidebar extends Component {
                     <Collapse in={this.state[prop.state]}>
                       <ul className="nav">
                         {prop.views.map((prop, key) => {
+                          if (prop.hidden) {
+                              return null;
+                          }
                           return (
                             <li
                               className={this.activeRoute(prop.path)}

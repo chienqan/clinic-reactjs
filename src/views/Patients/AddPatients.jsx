@@ -13,6 +13,8 @@ import Button from "components/CustomButton/CustomButton.jsx";
 import Select from "react-select";
 import { selectOptions, genderOptions } from "variables/Variables.jsx";
 import Datetime from "react-datetime";
+import request from "libs/request";
+import attachToken from "libs/attachToken";
 
 class AddPatients extends Component {
     constructor(props) {
@@ -23,6 +25,24 @@ class AddPatients extends Component {
             multipleSelect: null,
             singleSelect: null,
         };
+
+        this.handleClickSave = this.handleClickSave.bind(this);
+    }
+
+    async handleClickSave() {
+        let params = {
+            medicine: {
+                name: this.state.type_text
+            }
+        };
+
+        try {
+            await request.post(attachToken('/drugs'), params);
+            this.props.history.push('/drugs/list');
+        } catch (e) {
+            console.log(e.message);
+        }
+
     }
 
     render() {

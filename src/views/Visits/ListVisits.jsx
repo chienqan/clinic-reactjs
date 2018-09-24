@@ -5,76 +5,47 @@ import { Grid, Row, Col } from "react-bootstrap";
 
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
-
-const dataTable = [
-    ["Tiger Nixon", "System Architect", "Edinburgh", "61"],
-    ["Garrett Winters", "Accountant", "Tokyo", "63"],
-    ["Ashton Cox", "Junior Technical Author", "San Francisco", "66"],
-    ["Cedric Kelly", "Senior Javascript Developer", "Edinburgh", "22"],
-    ["Airi Satou", "Accountant", "Tokyo", "33"],
-    ["Brielle Williamson", "Integration Specialist", "New York", "61"],
-    ["Herrod Chandler", "Sales Assistant", "San Francisco", "59"],
-    ["Rhona Davidson", "Integration Specialist", "Tokyo", "55"],
-    ["Colleen Hurst", "Javascript Developer", "San Francisco", "39"],
-    ["Sonya Frost", "Software Engineer", "Edinburgh", "23"],
-    ["Jena Gaines", "Office Manager", "London", "30"],
-    ["Quinn Flynn", "Support Lead", "Edinburgh", "22"],
-    ["Charde Marshall", "Regional Director", "San Francisco", "36"],
-    ["Haley Kennedy", "Senior Marketing Designer", "London", "43"],
-    ["Tatyana Fitzpatrick", "Regional Director", "London", "19"],
-    ["Michael Silva", "Marketing Designer", "London", "66"],
-    ["Paul Byrd", "Chief Financial Officer (CFO)", "New York", "64"],
-    ["Gloria Little", "Systems Administrator", "New York", "59"],
-    ["Bradley Greer", "Software Engineer", "London", "41"],
-    ["Dai Rios", "Personnel Lead", "Edinburgh", "35"],
-    ["Jenette Caldwell", "Development Lead", "New York", "30"],
-    ["Yuri Berry", "Chief Marketing Officer (CMO)", "New York", "40"],
-    ["Caesar Vance", "Pre-Sales Support", "New York", "21"],
-    ["Doris Wilder", "Sales Assistant", "Sidney", "23"],
-    ["Angelica Ramos", "Chief Executive Officer (CEO)", "London", "47"],
-    ["Gavin Joyce", "Developer", "Edinburgh", "42"],
-    ["Jennifer Chang", "Regional Director", "Singapore", "28"],
-    ["Brenden Wagner", "Software Engineer", "San Francisco", "28"],
-    ["Fiona Green", "Chief Operating Officer (COO)", "San Francisco", "48"],
-    ["Shou Itou", "Regional Marketing", "Tokyo", "20"],
-    ["Michelle House", "Integration Specialist", "Sidney", "37"],
-    ["Suki Burks", "Developer", "London", "53"],
-    ["Prescott Bartlett", "Technical Author", "London", "27"],
-    ["Gavin Cortez", "Team Leader", "San Francisco", "22"],
-    ["Martena Mccray", "Post-Sales support", "Edinburgh", "46"],
-    ["Unity Butler", "Marketing Designer", "San Francisco", "47"],
-    ["Howard Hatfield", "Office Manager", "San Francisco", "51"],
-    ["Hope Fuentes", "Secretary", "San Francisco", "41"],
-    ["Vivian Harrell", "Financial Controller", "San Francisco", "62"],
-    ["Timothy Mooney", "Office Manager", "London", "37"],
-    ["Jackson Bradshaw", "Director", "New York", "65"],
-    ["Olivia Liang", "Support Engineer", "Singapore", "64"]
-];
+import request from "libs/request";
+import access_token from "variables/accessTokenVariables";
+import _ from "lodash";
 
 class ListVisits extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            visits: []
+        };
         this.handleClickEdit = this.handleClickEdit.bind(this);
         this.handleClickAdd = this.handleClickAdd.bind(this);
     }
 
-    handleClickAdd = () => {
+    async componentDidMount() {
+        let response = await request.get(`/visits?access_token=${access_token}`);
+        this.setState({
+            visits: response.data
+        });
+    }
+
+    handleClickAdd() {
         this.props.history.push('/visits/add')
     };
 
-    handleClickEdit = () => {
+    handleClickEdit() {
         this.props.history.push('/visits/edit/')
     };
 
-    renderAction() {
-        return dataTable.map((prop, key) => {
+    renderCell() {
+        const {visits} = this.state;
+
+        if(_.isEmpty(visits)) {
+            return [];
+        }
+
+        return visits.map((prop, key) => {
             return {
                 id: key,
-                prescriptionid: prop[3],
-                patient: prop[0],
-                diseases: prop[1],
-                datetime: prop[3],
+                datetime: prop.date + ' ' + prop.time,
+                patient: prop.patient.name,
                 actions: (
                     // we've added some custom button actions
                     <div className="actions-right">
@@ -114,33 +85,27 @@ class ListVisits extends Component {
                     <Row>
                         <Col md={12}>
                             <Card
-                                title="Patients"
+                                title="Visits"
                                 bigIcon={this.renderIconPlus()}
                                 content={
                                     <ReactTable
-                                        data={this.renderAction()}
+                                        data={this.renderCell()}
                                         columns={[
                                             {
-                                                Header: "Prescription ID",
-                                                accessor: "prescriptionid",
-                                                sortable: false,
-                                                filterable: false
-                                            },
-                                            {
-                                                Header: "Patient",
-                                                accessor: "patient",
-                                                sortable: false,
-                                                filterable: false
-                                            },
-                                            {
-                                                Header: "Diseases",
-                                                accessor: "diseases",
+                                                Header: "Id",
+                                                accessor: "id",
                                                 sortable: false,
                                                 filterable: false
                                             },
                                             {
                                                 Header: "Datetime",
                                                 accessor: "datetime",
+                                                sortable: false,
+                                                filterable: false
+                                            },
+                                            {
+                                                Header: "Patient",
+                                                accessor: "patient",
                                                 sortable: false,
                                                 filterable: false
                                             },

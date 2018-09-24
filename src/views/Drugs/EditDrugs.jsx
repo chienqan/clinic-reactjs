@@ -10,15 +10,50 @@ import {
 
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
+import request from "libs/request";
+import attachToken from "libs/attachToken";
 
 class EditDrugs extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            type_text: "",
-            type_textError: null,
-            multipleSelect: null
+            drugId: this.props.match.params.id,
+            medicineName: "",
+            medicineNameError: null,
+            prescriptionId: "",
+            prescriptionIdError: null
         };
+        this.handleClickSave = this.handleClickSave.bind(this);
+    }
+
+    async componentDidMount() {
+        const {drugId} = this.state;
+        let response = await request.get(attachToken(`/drugs/${drugId}`));
+        let drug = response.data;
+        this.setState({
+            medicineName: drug.medicine.name,
+            prescriptionId: drug.prescriptionId ? drug.prescriptionId : 1
+        });
+    }
+
+    async handleClickSave() {
+        const {drugId, medicineName, prescriptionId} = this.state;
+        let params = {
+            id: drugId,
+            medicine: {
+                name: medicineName
+            },
+            prescription: {
+                id: prescriptionId
+            }
+        };
+
+        try {
+            await request.put(attachToken('/drugs'), params);
+            this.props.history.push('/drugs/list');
+        } catch (e) {
+            console.log(e.message);
+        }
     }
 
     render() {
@@ -34,25 +69,49 @@ class EditDrugs extends Component {
                                         <div>
                                             <FormGroup>
                                                 <ControlLabel>
-                                                    Medicine: <span className="star">*</span>
+                                                    Medicine Name: <span className="star">*</span>
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="text"
-                                                    name="type_text"
+                                                    name="medicineName"
+                                                    value={this.state.medicineName}
                                                     onChange={event => {
-                                                        this.setState({ type_text: event.target.value });
+                                                        this.setState({ medicineName: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                type_textError: (
+                                                                medicineNameError: (
                                                                     <small className="text-danger">
-                                                                        Medicine is required.
+                                                                        This field is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_textError: null });
+                                                            : this.setState({ medicineNameError: null });
                                                     }}
                                                 />
-                                                {this.state.type_textError}
+                                                {this.state.medicineNameError}
+                                            </FormGroup>
+                                            <FormGroup>
+                                                <ControlLabel>
+                                                    Prescription Id:
+                                                </ControlLabel>
+                                                <FormControl
+                                                    type="text"
+                                                    name="prescriptionId"
+                                                    value={this.state.prescriptionId}
+                                                    onChange={event => {
+                                                        this.setState({ prescriptionId: event.target.value });
+                                                        event.target.value === ""
+                                                            ? this.setState({
+                                                                prescriptionIdError: (
+                                                                    <small className="text-danger">
+                                                                        This field is required.
+                                                                    </small>
+                                                                )
+                                                            })
+                                                            : this.setState({ prescriptionIdError: null });
+                                                    }}
+                                                />
+                                                {this.state.prescriptionIdError}
                                             </FormGroup>
                                         </div>
                                     }
@@ -61,8 +120,7 @@ class EditDrugs extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
-                                            // wd
-                                            // onClick={this.handleLoginSubmit.bind(this)}
+                                            onClick={this.handleClickSave}
                                         >
                                             Save
                                         </Button>

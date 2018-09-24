@@ -10,14 +10,51 @@ import {
 
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
+import request from "libs/request";
+import attachToken from "libs/attachToken";
 
 class EditDiseases extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            type_text: "",
-            type_textError: null
+            diseaseId: this.props.match.params.id,
+            diseaseCode: "",
+            diseaseCodeError: null,
+            prescriptionId: "",
+            prescriptionIdError: null
         };
+
+        this.handleClickSave = this.handleClickSave.bind(this);
+    }
+
+    async componentDidMount() {
+        const {diseaseId} = this.state;
+        let response = await request.get(attachToken(`/diseases/${diseaseId}`));
+        let icd = response.data.icd;
+        this.setState({
+            diseaseCode: icd.diseaseCode,
+            prescriptionId: icd.prescriptionId ? icd.prescriptionId : 1
+        });
+    }
+
+    async handleClickSave() {
+        const {diseaseId, diseaseCode, prescriptionId} = this.state;
+        let params = {
+            id: diseaseId,
+            icd: {
+                diseaseCode: diseaseCode
+            },
+            prescription: {
+                id: prescriptionId
+            }
+        };
+
+        try {
+            await request.put(attachToken('/diseases'), params);
+            this.props.history.push('/diseases/list');
+        } catch (e) {
+            console.log(e.message);
+        }
     }
 
     render() {
@@ -36,47 +73,46 @@ class EditDiseases extends Component {
                                                     ICD Code: <span className="star">*</span>
                                                 </ControlLabel>
                                                 <FormControl
-                                                    type="number"
-                                                    name="type_number"
+                                                    type="text"
+                                                    name="diseaseCode"
+                                                    value={this.state.diseaseCode}
                                                     onChange={event => {
-                                                        this.setState({
-                                                            type_number: event.target.value
-                                                        });
-                                                        var digitRex = /^\d+$/;
-                                                        digitRex.test(event.target.value) === false
+                                                        this.setState({ diseaseCode: event.target.value });
+                                                        event.target.value === ""
                                                             ? this.setState({
-                                                                type_numberError: (
+                                                                diseaseCodeError: (
                                                                     <small className="text-danger">
-                                                                        Postal code has to be a number.
+                                                                        This field is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_numberError: null });
+                                                            : this.setState({ diseaseCodeError: null });
                                                     }}
                                                 />
-                                                {this.state.type_numberError}
+                                                {this.state.diseaseCodeError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
-                                                    Disease: <span className="star">*</span>
+                                                    Prescription Id:
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="text"
-                                                    name="type_text"
+                                                    name="prescriptionId"
+                                                    value={this.state.prescriptionId}
                                                     onChange={event => {
-                                                        this.setState({ type_text: event.target.value });
+                                                        this.setState({ prescriptionId: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                type_textError: (
+                                                                prescriptionIdError: (
                                                                     <small className="text-danger">
-                                                                        Patient's name is required.
+                                                                        This field is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_textError: null });
+                                                            : this.setState({ prescriptionIdError: null });
                                                     }}
                                                 />
-                                                {this.state.type_textError}
+                                                {this.state.prescriptionIdError}
                                             </FormGroup>
                                         </div>
                                     }
@@ -85,8 +121,7 @@ class EditDiseases extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
-                                            // wd
-                                            // onClick={this.handleLoginSubmit.bind(this)}
+                                            onClick={this.handleClickSave}
                                         >
                                             Save
                                         </Button>

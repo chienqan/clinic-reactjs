@@ -7,17 +7,36 @@ import {
     FormControl,
     ControlLabel
 } from "react-bootstrap";
-
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
+import request from "libs/request";
+import attachToken from "libs/attachToken";
 
 class AddDiseases extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            type_text: "",
-            type_textError: null
+            diseaseCode: "",
+            diseaseCodeError: null
         };
+
+        this.handleClickSave = this.handleClickSave.bind(this);
+    }
+
+    async handleClickSave() {
+        let params = {
+            icd: {
+                diseaseCode: this.state.diseaseCode
+            }
+        };
+
+        try {
+            await request.post(attachToken('/diseases'), params);
+            this.props.history.push('/diseases/list');
+        } catch (e) {
+            console.log(e.message);
+        }
+
     }
 
     render() {
@@ -36,47 +55,22 @@ class AddDiseases extends Component {
                                                     ICD Code: <span className="star">*</span>
                                                 </ControlLabel>
                                                 <FormControl
-                                                    type="number"
-                                                    name="type_number"
-                                                    onChange={event => {
-                                                        this.setState({
-                                                            type_number: event.target.value
-                                                        });
-                                                        var digitRex = /^\d+$/;
-                                                        digitRex.test(event.target.value) === false
-                                                            ? this.setState({
-                                                                type_numberError: (
-                                                                    <small className="text-danger">
-                                                                        Postal code has to be a number.
-                                                                    </small>
-                                                                )
-                                                            })
-                                                            : this.setState({ type_numberError: null });
-                                                    }}
-                                                />
-                                                {this.state.type_numberError}
-                                            </FormGroup>
-                                            <FormGroup>
-                                                <ControlLabel>
-                                                    Disease: <span className="star">*</span>
-                                                </ControlLabel>
-                                                <FormControl
                                                     type="text"
-                                                    name="type_text"
+                                                    name="diseaseCode"
                                                     onChange={event => {
-                                                        this.setState({ type_text: event.target.value });
+                                                        this.setState({ diseaseCode: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                type_textError: (
+                                                                diseaseCodeError: (
                                                                     <small className="text-danger">
-                                                                        Patient's name is required.
+                                                                        This field is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_textError: null });
+                                                            : this.setState({ diseaseCodeError: null });
                                                     }}
                                                 />
-                                                {this.state.type_textError}
+                                                {this.state.diseaseCodeError}
                                             </FormGroup>
                                         </div>
                                     }
@@ -85,8 +79,7 @@ class AddDiseases extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
-                                            // wd
-                                            // onClick={this.handleLoginSubmit.bind(this)}
+                                            onClick={this.handleClickSave}
                                         >
                                             Save
                                         </Button>
