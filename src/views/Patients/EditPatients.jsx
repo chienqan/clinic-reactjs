@@ -18,10 +18,17 @@ class EditPatients extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            type_text: "",
-            type_textError: null,
+            patientName: "",
+            patientNameError: null,
+            patientGender: null,
+            patientBirthday: null,
             multipleSelect: null,
-            singleSelect: null,
+            patientStreetAddress: "",
+            patientStreetAddressError: null,
+            patientCity: null,
+            patientState: null,
+            patientPostalCode: "",
+            patientPostalCodeError: null
         };
     }
 
@@ -42,21 +49,21 @@ class EditPatients extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="text"
-                                                    name="type_text"
+                                                    name="patientName"
                                                     onChange={event => {
-                                                        this.setState({ type_text: event.target.value });
+                                                        this.setState({ patientName: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                type_textError: (
+                                                                patientNameError: (
                                                                     <small className="text-danger">
                                                                         Patient's name is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_textError: null });
+                                                            : this.setState({ patientNameError: null });
                                                     }}
                                                 />
-                                                {this.state.type_textError}
+                                                {this.state.patientNameError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
@@ -64,11 +71,11 @@ class EditPatients extends Component {
                                                 </ControlLabel>
                                                 <Select
                                                     placeholder=""
-                                                    name="singleSelect"
-                                                    value={this.state.singleSelect}
+                                                    name="patientGender"
+                                                    value={this.state.patientGender}
                                                     options={genderOptions}
                                                     onChange={value =>
-                                                        this.setState({ singleSelect: value })
+                                                        this.setState({ patientGender: value })
                                                     }
                                                 />
                                             </FormGroup>
@@ -80,6 +87,9 @@ class EditPatients extends Component {
                                                     timeFormat={false}
                                                     inputProps={{ placeholder: "" }}
                                                     defaultValue={new Date()}
+                                                    onChange={value =>
+                                                        this.setState({ patientBirthday: value })
+                                                    }
                                                 />
                                             </FormGroup>
                                             <FormGroup>
@@ -88,21 +98,21 @@ class EditPatients extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="text"
-                                                    name="type_text"
+                                                    name="patientStreetAddress"
                                                     onChange={event => {
-                                                        this.setState({ type_text: event.target.value });
+                                                        this.setState({ patientStreetAddress: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                type_textError: (
+                                                                patientStreetAddressError: (
                                                                     <small className="text-danger">
                                                                         Street address is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_textError: null });
+                                                            : this.setState({ patientStreetAddressError: null });
                                                     }}
                                                 />
-                                                {this.state.type_textError}
+                                                {this.state.patientStreetAddressError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
@@ -112,11 +122,11 @@ class EditPatients extends Component {
                                                     placeholder=""
                                                     closeOnSelect={false}
                                                     multi={true}
-                                                    name="multipleSelect"
-                                                    value={this.state.multipleSelect}
+                                                    name="patientCity"
+                                                    value={this.state.patientCity}
                                                     options={selectOptions}
                                                     onChange={value => {
-                                                        this.setState({ multipleSelect: value });
+                                                        this.setState({ patientCity: value });
                                                     }}
                                                 />
                                                 {this.state.passwordErrorLogin}
@@ -129,11 +139,11 @@ class EditPatients extends Component {
                                                     placeholder=""
                                                     closeOnSelect={false}
                                                     multi={true}
-                                                    name="multipleSelect"
-                                                    value={this.state.multipleSelect}
+                                                    name="patientState"
+                                                    value={this.state.patientState}
                                                     options={selectOptions}
                                                     onChange={value => {
-                                                        this.setState({ multipleSelect: value });
+                                                        this.setState({ patientState: value });
                                                     }}
                                                 />
                                                 {this.state.passwordErrorLogin}
@@ -144,24 +154,24 @@ class EditPatients extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="number"
-                                                    name="type_number"
+                                                    name="patientPostalCode"
                                                     onChange={event => {
                                                         this.setState({
-                                                            type_number: event.target.value
+                                                            patientPostalCode: event.target.value
                                                         });
                                                         var digitRex = /^\d+$/;
                                                         digitRex.test(event.target.value) === false
                                                             ? this.setState({
-                                                                type_numberError: (
+                                                                patientPostalCodeError: (
                                                                     <small className="text-danger">
                                                                         Postal code has to be a number.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_numberError: null });
+                                                            : this.setState({ patientPostalCodeError: null });
                                                     }}
                                                 />
-                                                {this.state.type_numberError}
+                                                {this.state.patientPostalCodeError}
                                             </FormGroup>
                                         </div>
                                     }

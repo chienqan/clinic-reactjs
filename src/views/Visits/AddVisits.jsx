@@ -18,9 +18,12 @@ class AddVisits extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            type_text: "",
-            type_textError: null,
-            multipleSelect: null,
+            visitPrescriptionId: "",
+            visitPrescriptionIdError: null,
+            visitPatient: "",
+            visitPatientError: null,
+            visitDiseases: null,
+            visitDatetime: null
         };
     }
 
@@ -41,24 +44,24 @@ class AddVisits extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="number"
-                                                    name="type_number"
+                                                    name="visitPrescriptionId"
                                                     onChange={event => {
                                                         this.setState({
-                                                            type_number: event.target.value
+                                                            visitPrescriptionId: event.target.value
                                                         });
                                                         var digitRex = /^\d+$/;
                                                         digitRex.test(event.target.value) === false
                                                             ? this.setState({
-                                                                type_numberError: (
+                                                                visitPrescriptionIdError: (
                                                                     <small className="text-danger">
                                                                         This has to be a number.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_numberError: null });
+                                                            : this.setState({ visitPrescriptionIdError: null });
                                                     }}
                                                 />
-                                                {this.state.type_numberError}
+                                                {this.state.visitPrescriptionIdError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
@@ -66,21 +69,21 @@ class AddVisits extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="text"
-                                                    name="type_text"
+                                                    name="visitPatient"
                                                     onChange={event => {
-                                                        this.setState({ type_text: event.target.value });
+                                                        this.setState({ visitPatient: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                type_textError: (
+                                                                visitPatientError: (
                                                                     <small className="text-danger">
-                                                                        Patient's name is required.
+                                                                        This field is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_textError: null });
+                                                            : this.setState({ visitPatientError: null });
                                                     }}
                                                 />
-                                                {this.state.type_textError}
+                                                {this.state.visitPatientError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
@@ -90,11 +93,11 @@ class AddVisits extends Component {
                                                     placeholder=""
                                                     closeOnSelect={false}
                                                     multi={true}
-                                                    name="multipleSelect"
-                                                    value={this.state.multipleSelect}
+                                                    name="visitDiseases"
+                                                    value={this.state.visitDiseases}
                                                     options={selectOptions}
                                                     onChange={value => {
-                                                        this.setState({ multipleSelect: value });
+                                                        this.setState({ visitDiseases: value });
                                                     }}
                                                 />
                                                 {this.state.passwordErrorLogin}
@@ -107,6 +110,9 @@ class AddVisits extends Component {
                                                     timeFormat={false}
                                                     inputProps={{ placeholder: "" }}
                                                     defaultValue={new Date()}
+                                                    onChange={value => {
+                                                        this.setState({ visitDatetime: value });
+                                                    }}
                                                 />
                                             </FormGroup>
                                         </div>

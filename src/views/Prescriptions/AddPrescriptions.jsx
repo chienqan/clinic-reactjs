@@ -18,10 +18,16 @@ class AddPrescriptions extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            type_text: "",
-            type_textError: null,
-            multipleSelect: null,
-            singleSelect: null,
+            prescriptionsPatient: "",
+            prescriptionsPatientError: null,
+            prescriptionsDiseases: null,
+            prescriptionsDrugs: null,
+            prescriptionsQuantity: "",
+            prescriptionsQuantityError: null,
+            prescriptionsDose: null,
+            prescriptionsUse: "",
+            prescriptionsUseError: null,
+            prescriptionsDatetime: null
         };
     }
 
@@ -42,21 +48,21 @@ class AddPrescriptions extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="text"
-                                                    name="type_text"
+                                                    name="prescriptionsPatient"
                                                     onChange={event => {
-                                                        this.setState({ type_text: event.target.value });
+                                                        this.setState({ prescriptionsPatient: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                type_textError: (
+                                                                prescriptionsPatientError: (
                                                                     <small className="text-danger">
-                                                                        Patient's name is required.
+                                                                        This field is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_textError: null });
+                                                            : this.setState({ prescriptionsPatientError: null });
                                                     }}
                                                 />
-                                                {this.state.type_textError}
+                                                {this.state.prescriptionsPatientError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
@@ -66,11 +72,11 @@ class AddPrescriptions extends Component {
                                                     placeholder=""
                                                     closeOnSelect={false}
                                                     multi={true}
-                                                    name="multipleSelect"
-                                                    value={this.state.multipleSelect}
+                                                    name="prescriptionsDiseases"
+                                                    value={this.state.prescriptionsDiseases}
                                                     options={selectOptions}
                                                     onChange={value => {
-                                                        this.setState({ multipleSelect: value });
+                                                        this.setState({ prescriptionsDiseases: value });
                                                     }}
                                                 />
                                             </FormGroup>
@@ -84,11 +90,11 @@ class AddPrescriptions extends Component {
                                                     placeholder=""
                                                     closeOnSelect={false}
                                                     multi={true}
-                                                    name="multipleSelect"
-                                                    value={this.state.multipleSelect}
+                                                    name="prescriptionsDrugs"
+                                                    value={this.state.prescriptionsDrugs}
                                                     options={selectOptions}
                                                     onChange={value => {
-                                                        this.setState({ multipleSelect: value });
+                                                        this.setState({ prescriptionsDrugs: value });
                                                     }}
                                                 />
                                             </FormGroup>
@@ -100,24 +106,24 @@ class AddPrescriptions extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="number"
-                                                    name="type_number"
+                                                    name="prescriptionsQuantity"
                                                     onChange={event => {
                                                         this.setState({
-                                                            type_number: event.target.value
+                                                            prescriptionsQuantity: event.target.value
                                                         });
                                                         var digitRex = /^\d+$/;
                                                         digitRex.test(event.target.value) === false
                                                             ? this.setState({
-                                                                type_numberError: (
+                                                                prescriptionsQuantityError: (
                                                                     <small className="text-danger">
                                                                         This has to be a number.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_numberError: null });
+                                                            : this.setState({ prescriptionsQuantityError: null });
                                                     }}
                                                 />
-                                                {this.state.type_numberError}
+                                                {this.state.prescriptionsQuantityError}
                                             </FormGroup>
                                             </Col>
                                             <Col md={4}>
@@ -127,11 +133,11 @@ class AddPrescriptions extends Component {
                                                 </ControlLabel>
                                                 <Select
                                                     placeholder=""
-                                                    name="singleSelect"
-                                                    value={this.state.singleSelect}
+                                                    name="prescriptionsDose"
+                                                    value={this.state.prescriptionsDose}
                                                     options={doseOptions}
                                                     onChange={value =>
-                                                        this.setState({ singleSelect: value })
+                                                        this.setState({ prescriptionsDose: value })
                                                     }
                                                 />
                                             </FormGroup>
@@ -143,21 +149,21 @@ class AddPrescriptions extends Component {
                                                 </ControlLabel>
                                                 <FormControl
                                                     type="text"
-                                                    name="type_text"
+                                                    name="prescriptionsUse"
                                                     onChange={event => {
-                                                        this.setState({ type_text: event.target.value });
+                                                        this.setState({ prescriptionsUse: event.target.value });
                                                         event.target.value === ""
                                                             ? this.setState({
-                                                                type_textError: (
+                                                                PrescriptionsUseError: (
                                                                     <small className="text-danger">
                                                                         This field is required.
                                                                     </small>
                                                                 )
                                                             })
-                                                            : this.setState({ type_textError: null });
+                                                            : this.setState({ prescriptionsUseError: null });
                                                     }}
                                                 />
-                                                {this.state.type_textError}
+                                                {this.state.prescriptionsUseError}
                                             </FormGroup>
                                             <FormGroup>
                                                 <ControlLabel>
@@ -166,6 +172,9 @@ class AddPrescriptions extends Component {
                                                 <Datetime
                                                     inputProps={{ placeholder: "Datetime Picker Here" }}
                                                     defaultValue={new Date()}
+                                                    onChange={value =>
+                                                        this.setState({ prescriptionsDatetime: value })
+                                                    }
                                                 />
                                             </FormGroup>
                                         </div>
