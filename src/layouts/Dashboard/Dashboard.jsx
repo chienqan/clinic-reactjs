@@ -29,16 +29,16 @@ class Dashboard extends Component {
     }
 
     componentWillMount() {
-        if(_.isEmpty(this.props.token)) {
-            this.props.history.push('/login');
-        }
-
         if (document.documentElement.className.indexOf("nav-open") !== -1) {
             document.documentElement.classList.toggle("nav-open");
         }
     }
 
     componentDidMount() {
+        if(_.isEmpty(this.props.token)) {
+            this.props.history.push('/login');
+        }
+
         this.setState({_notificationSystem: this.refs.notificationSystem});
         if (navigator.platform.indexOf("Win") > -1) {
             ps = new PerfectScrollbar(this.refs.mainPanel);

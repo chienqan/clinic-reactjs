@@ -30,9 +30,23 @@ const openBrowser = require('react-dev-utils/openBrowser');
 const paths = require('../config/paths');
 const config = require('../config/webpack.config.dev');
 const createDevServerConfig = require('../config/webpackDevServer.config');
+const express = require('express');
+const proxy = require('http-proxy-middleware');
 
 const useYarn = fs.existsSync(paths.yarnLockFile);
 const isInteractive = process.stdout.isTTY;
+
+const app = express();
+
+app.use('/api', proxy({
+    target: 'http://localhost:8080',
+    pathRewrite: {
+        '^/api' : '/',
+    },
+}));
+app.use('*', proxy({target: 'http://localhost:3000'}));
+
+app.listen(3001);
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -68,7 +82,7 @@ choosePort(HOST, DEFAULT_PORT)
     }
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const appName = require(paths.appPackageJson).name;
-    const urls = prepareUrls(protocol, HOST, port);
+    const urls = prepareUrls(protocol, HOST, 3001);
     // Create a webpack compiler that is configured with custom messages.
     const compiler = createCompiler(webpack, config, appName, urls, useYarn);
     // Load proxy config
