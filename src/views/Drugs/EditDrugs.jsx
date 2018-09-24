@@ -11,7 +11,7 @@ import {
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import request from "libs/request";
-import attachToken from "libs/attachToken";
+import {connect} from "react-redux";
 
 class EditDrugs extends Component {
     constructor(props) {
@@ -23,21 +23,24 @@ class EditDrugs extends Component {
             prescriptionId: "",
             prescriptionIdError: null
         };
+
         this.handleClickSave = this.handleClickSave.bind(this);
     }
 
     async componentDidMount() {
         const {drugId} = this.state;
-        let response = await request.get(attachToken(`/drugs/${drugId}`));
-        let drug = response.data;
+        const {token} = this.props;
+        let response = await request.get(`/drugs/${drugId}?access_token=${token}`);
         this.setState({
-            medicineName: drug.medicine.name,
-            prescriptionId: drug.prescriptionId ? drug.prescriptionId : 1
+            medicineName: response.data.medicine.name,
+            prescriptionId: response.data.prescriptionId ? response.data.prescriptionId : 1
         });
     }
 
     async handleClickSave() {
         const {drugId, medicineName, prescriptionId} = this.state;
+        const {token} = this.props;
+
         let params = {
             id: drugId,
             medicine: {
@@ -49,7 +52,7 @@ class EditDrugs extends Component {
         };
 
         try {
-            await request.put(attachToken('/drugs'), params);
+            await request.put(`/drugs?access_token=${token}`, params);
             this.props.history.push('/drugs/list');
         } catch (e) {
             console.log(e.message);
@@ -90,29 +93,6 @@ class EditDrugs extends Component {
                                                 />
                                                 {this.state.medicineNameError}
                                             </FormGroup>
-                                            <FormGroup>
-                                                <ControlLabel>
-                                                    Prescription Id:
-                                                </ControlLabel>
-                                                <FormControl
-                                                    type="text"
-                                                    name="prescriptionId"
-                                                    value={this.state.prescriptionId}
-                                                    onChange={event => {
-                                                        this.setState({ prescriptionId: event.target.value });
-                                                        event.target.value === ""
-                                                            ? this.setState({
-                                                                prescriptionIdError: (
-                                                                    <small className="text-danger">
-                                                                        This field is required.
-                                                                    </small>
-                                                                )
-                                                            })
-                                                            : this.setState({ prescriptionIdError: null });
-                                                    }}
-                                                />
-                                                {this.state.prescriptionIdError}
-                                            </FormGroup>
                                         </div>
                                     }
                                     ftTextCenter
@@ -120,6 +100,7 @@ class EditDrugs extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
+                                            wd
                                             onClick={this.handleClickSave}
                                         >
                                             Save
@@ -135,4 +116,5 @@ class EditDrugs extends Component {
     }
 }
 
-export default EditDrugs;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(EditDrugs);

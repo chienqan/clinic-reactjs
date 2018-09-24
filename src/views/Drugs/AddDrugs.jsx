@@ -11,7 +11,7 @@ import {
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import request from "libs/request";
-import attachToken from "libs/attachToken";
+import {connect} from "react-redux";
 
 class AddDrugs extends Component {
     constructor(props) {
@@ -25,6 +25,8 @@ class AddDrugs extends Component {
     }
 
     async handleClickSave() {
+        const {token} = this.props;
+
         let params = {
             medicine: {
                 name: this.state.medicineName
@@ -32,7 +34,7 @@ class AddDrugs extends Component {
         };
 
         try {
-            await request.post(attachToken('/drugs'), params);
+            await request.post(`/drugs?access_token=${token}`, params);
             this.props.history.push('/drugs/list');
         } catch (e) {
             console.log(e.message);
@@ -80,6 +82,7 @@ class AddDrugs extends Component {
                                         <Button
                                             bsStyle="info"
                                             fill
+                                            wd
                                             onClick={this.handleClickSave}
                                         >
                                             Save
@@ -95,4 +98,5 @@ class AddDrugs extends Component {
     }
 }
 
-export default AddDrugs;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(AddDrugs);

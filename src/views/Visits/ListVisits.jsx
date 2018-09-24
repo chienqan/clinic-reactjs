@@ -6,8 +6,8 @@ import { Grid, Row, Col } from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import request from "libs/request";
-import access_token from "variables/accessTokenVariables";
 import _ from "lodash";
+import {connect} from "react-redux";
 
 class ListVisits extends Component {
     constructor(props) {
@@ -20,7 +20,8 @@ class ListVisits extends Component {
     }
 
     async componentDidMount() {
-        let response = await request.get(`/visits?access_token=${access_token}`);
+        const {token} = this.props;
+        let response = await request.get(`/visits?access_token=${token}`);
         this.setState({
             visits: response.data
         });
@@ -131,4 +132,5 @@ class ListVisits extends Component {
     }
 }
 
-export default ListVisits;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(ListVisits);

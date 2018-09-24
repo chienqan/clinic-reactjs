@@ -6,8 +6,8 @@ import {Grid, Row, Col} from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import request from "libs/request";
-import attachToken from "libs/attachToken";
 import _ from "lodash";
+import {connect} from "react-redux";
 
 
 class ListDiseases extends Component {
@@ -17,13 +17,15 @@ class ListDiseases extends Component {
             diseases: [],
             loading: true
         };
+
         this.handleClickEdit = this.handleClickEdit.bind(this);
         this.handleClickAdd = this.handleClickAdd.bind(this);
         this.handleClickRemove = this.handleClickRemove.bind(this);
     }
 
     async componentDidMount() {
-        let response = await request.get(attachToken('/diseases'));
+        const {token} = this.props;
+        let response = await request.get(`/diseases?access_token=${token}`);
         this.setState({
             diseases: response.data,
             loading: false
@@ -39,9 +41,11 @@ class ListDiseases extends Component {
     }
 
     async handleClickRemove(key, id) {
+        const {token} = this.props;
+        const {diseases} = this.state;
+
         try {
-            const {diseases} = this.state;
-            await request.delete(attachToken(`/diseases/${id}`));
+            await request.delete(`/diseases/${id}?access_token=${token}`);
             diseases.splice(key, 1);
             this.setState({ diseases: diseases });
         } catch (e) {
@@ -146,5 +150,5 @@ class ListDiseases extends Component {
         );
     }
 }
-
-export default ListDiseases;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(ListDiseases);

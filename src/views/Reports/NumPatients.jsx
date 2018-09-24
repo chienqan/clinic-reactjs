@@ -4,8 +4,8 @@ import { Table, Grid, Row, Col } from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
 
 import request from "libs/request";
-import access_token from "variables/accessTokenVariables";
 import _ from "lodash";
+import {connect} from "react-redux";
 
 class NumPatients extends Component {
     constructor(props) {
@@ -16,7 +16,8 @@ class NumPatients extends Component {
     }
 
     async componentDidMount() {
-        let response = await request.get(`/reports/number-of-patient-visit-per-day?access_token=${access_token}`);
+        const {token} = this.props;
+        let response = await request.get(`/reports/number-of-patient-visit-per-day?access_token=${token}`);
         this.setState({
             reports: response.data
         });
@@ -72,4 +73,5 @@ class NumPatients extends Component {
     }
 }
 
-export default NumPatients;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(NumPatients);

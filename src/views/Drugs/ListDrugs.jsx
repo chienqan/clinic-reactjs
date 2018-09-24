@@ -6,7 +6,7 @@ import { Grid, Row, Col } from "react-bootstrap";
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import request from "libs/request";
-import attachToken from "libs/attachToken";
+import {connect} from "react-redux";
 import _ from "lodash";
 
 class ListDrugs extends Component {
@@ -16,13 +16,15 @@ class ListDrugs extends Component {
             drugs: [],
             loading: true
         };
+
         this.handleClickEdit = this.handleClickEdit.bind(this);
         this.handleClickAdd = this.handleClickAdd.bind(this);
         this.handleClickRemove = this.handleClickRemove.bind(this);
     }
 
     async componentDidMount() {
-        let response = await request.get(attachToken('/drugs'));
+        const {token} = this.props;
+        let response = await request.get(`/drugs?access_token=${token}`);
         this.setState({
             drugs: response.data,
             loading: false
@@ -38,9 +40,11 @@ class ListDrugs extends Component {
     };
 
     async handleClickRemove(key, id) {
+        const {token} = this.props;
+        const {drugs} = this.state;
+
         try {
-            const {drugs} = this.state;
-            await request.delete(attachToken(`/drugs/${id}`));
+            await request.delete(`/drugs/${id}?access_token=${token}`);
             drugs.splice(key, 1);
             this.setState({ drugs: drugs });
         } catch (e) {
@@ -140,4 +144,5 @@ class ListDrugs extends Component {
     }
 }
 
-export default ListDrugs;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(ListDrugs);

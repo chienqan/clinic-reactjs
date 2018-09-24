@@ -14,7 +14,7 @@ import Select from "react-select";
 import { selectOptions, genderOptions } from "variables/Variables.jsx";
 import Datetime from "react-datetime";
 import request from "libs/request";
-import attachToken from "libs/attachToken";
+import {connect} from "react-redux";
 
 class AddPatients extends Component {
     constructor(props) {
@@ -30,6 +30,8 @@ class AddPatients extends Component {
     }
 
     async handleClickSave() {
+        const {token} = this.props;
+
         let params = {
             medicine: {
                 name: this.state.type_text
@@ -37,7 +39,7 @@ class AddPatients extends Component {
         };
 
         try {
-            await request.post(attachToken('/drugs'), params);
+            await request.post(`/drugs?access_token${token}`, params);
             this.props.history.push('/drugs/list');
         } catch (e) {
             console.log(e.message);
@@ -206,4 +208,5 @@ class AddPatients extends Component {
     }
 }
 
-export default AddPatients;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(AddPatients);

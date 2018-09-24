@@ -10,7 +10,7 @@ import {
 import Card from "components/Card/Card.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 import request from "libs/request";
-import attachToken from "libs/attachToken";
+import {connect} from "react-redux";
 
 class AddDiseases extends Component {
     constructor(props) {
@@ -19,11 +19,12 @@ class AddDiseases extends Component {
             diseaseCode: "",
             diseaseCodeError: null
         };
-
         this.handleClickSave = this.handleClickSave.bind(this);
     }
 
     async handleClickSave() {
+        const {token} = this.props;
+
         let params = {
             icd: {
                 diseaseCode: this.state.diseaseCode
@@ -31,7 +32,7 @@ class AddDiseases extends Component {
         };
 
         try {
-            await request.post(attachToken('/diseases'), params);
+            await request.post(`/diseases?access_token=${token}`, params);
             this.props.history.push('/diseases/list');
         } catch (e) {
             console.log(e.message);
@@ -94,4 +95,5 @@ class AddDiseases extends Component {
     }
 }
 
-export default AddDiseases;
+const mapStateToProps = (state) => ({token: state.token});
+export default connect(mapStateToProps)(AddDiseases);

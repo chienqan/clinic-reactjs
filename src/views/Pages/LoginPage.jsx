@@ -9,17 +9,22 @@ import {
 } from "react-bootstrap";
 
 import Card from "components/Card/Card.jsx";
-
 import Button from "components/CustomButton/CustomButton.jsx";
 import bgImage from "assets/img/full-screen-image-3.jpg";
-
+import request from "libs/request";
+import {connect} from "react-redux";
+import { saveToken } from "store/actions/token.jsx";
 
 class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            cardHidden: true
+            cardHidden: true,
+            username: "",
+            password: "",
         };
+
+        this.handleClickLogin = this.handleClickLogin.bind(this);
     }
 
     componentDidMount() {
@@ -27,8 +32,29 @@ class LoginPage extends Component {
             function () {
                 this.setState({cardHidden: false});
             }.bind(this),
-            700
+            500
         );
+    }
+
+    async handleClickLogin() {
+        const {username, password} = this.state;
+
+        let config = {
+            method: 'post',
+            url: `/oauth/token?grant_type=password&username=${username}&password=${password}`,
+            headers: {
+                "Authorization": "Basic Y2xpZW50LWlkOnNlY3JldA=="
+            }
+        };
+
+        try {
+            let response = await request(config);
+            this.props.saveToken(response.data.token);
+            this.props.history.push('/diseases/list');
+        } catch (e) {
+            console.log(e.message);
+        }
+
     }
 
     render() {
@@ -52,17 +78,30 @@ class LoginPage extends Component {
                                                 content={
                                                     <div>
                                                         <FormGroup>
-                                                            <ControlLabel>Email address</ControlLabel>
-                                                            <FormControl placeholder="Enter email" type="email"/>
+                                                            <ControlLabel>Username</ControlLabel>
+                                                            <FormControl
+                                                                placeholder="Username"
+                                                                type="text"
+                                                                onChange={(event) => this.setState({ username: event.target.value })}
+                                                            />
                                                         </FormGroup>
                                                         <FormGroup>
                                                             <ControlLabel>Password</ControlLabel>
-                                                            <FormControl placeholder="Password" type="password"/>
+                                                            <FormControl
+                                                                placeholder="Password"
+                                                                type="password"
+                                                                onChange={(event) => this.setState({ password: event.target.value })}
+                                                            />
                                                         </FormGroup>
                                                     </div>
                                                 }
                                                 legend={
-                                                    <Button bsStyle="info" fill wd>
+                                                    <Button
+                                                        bsStyle="info"
+                                                        fill
+                                                        wd
+                                                        onClick={this.handleClickLogin}
+                                                    >
                                                         Login
                                                     </Button>
                                                 }
@@ -84,4 +123,16 @@ class LoginPage extends Component {
     }
 }
 
-export default LoginPage;
+const mapStateToProps = (state) => {
+    return  {
+        token: state.token,
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        saveToken: (token) => dispatch(saveToken(token))
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
